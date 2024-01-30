@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tela de Login</title>
+  <link rel="stylesheet" href="login.css">
+  <link rel="stylesheet" href="https://fontawesome.com/icons/user?f=classic&s=solid">
+</head>
+
+<body>
+  <div class="login-container">
+    <img src="icons/user_icon.png" alt="">
+    <form action="index.php" method="post">
+      <input type="text" id="matricula" name="matricula" placeholder="Digite sua matrícula" required>
+        
+     <!--- <input type="password" placeholder="Senha" required> -->
+      <br>   
+          <!--<button type="submit">Consultar</button> -->
+          <button type="button" onclick="consultarInfo()">Consultar</button> 
+        
+    </form>
+  </div>
+
+  <script>
+    function consultarInfo() {
+        var matricula = document.getElementById('matricula').value;
+
+        // Envia a solicitação AJAX
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', 'index.php', true);
+        xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+        
+        xhr.onload = function() {
+            if (xhr.status == 200) {
+                // Manipula a resposta JSON
+                var resposta = JSON.parse(xhr.responseText);
+                exibirResultado(resposta);
+            } else {
+                console.error('Erro na solicitação AJAX');
+            }
+        };
+
+        // Envia os dados do formulário
+        xhr.send('matricula=' + encodeURIComponent(matricula));
+    }
+
+    function exibirResultado(resposta) {
+        if (resposta.success) {
+            var mensagem = 'Dados:\n\n' +
+                'Nome: ' + resposta.data.nome;  + 
+                'Data de Nascimento: ' + resposta.data.data_nascimento;     
+            alert(mensagem);
+
+            // Redireciona para outra página
+            window.location.href = 'telaponto.php';
+
+        } else {
+            alert(resposta.message);
+        }
+    }
+</script>
+</body>
+
+</body>
+</html>
